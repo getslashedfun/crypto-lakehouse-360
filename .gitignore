@@ -1,0 +1,19 @@
+# segredos: nunca no Git
+.env
+.env.*
+.databrickscfg
+*.pem
+.aws/
+
+# ambiente Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# bundle: estado local do deploy
+.databricks/
+
+# dados locais
+data/
+*.zip

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Crypto Lakehouse 360 · Documentação v2</title>
+<style>
+@page { size: A4; margin: 14mm 13mm 16mm 13mm;
+  @bottom-left { content: "CRYPTO LAKEHOUSE 360 · DOCUMENTAÇÃO v2"; font: 7.5pt "Segoe UI", Arial, sans-serif; color: #6b7280; }
+  @bottom-right { content: "Página " counter(page) " / " counter(pages); font: 7.5pt "Segoe UI", Arial, sans-serif; color: #6b7280; }
+}
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html { font-size: 9.4pt; }
+body { margin: 0; font-family: "Segoe UI", Arial, Helvetica, sans-serif; line-height: 1.4; color: #1b2230; }
+p { margin: 0 0 5pt; }
+b { color: #0b1220; }
+code, pre { font-family: Consolas, "Courier New", monospace; }
+code { font-size: .92em; background: #eef1f5; padding: 0 2.5pt; border-radius: 2pt; }
+pre { margin: 3pt 0 7pt; padding: 6pt 8pt; background: #f1f4f8; border-left: 3pt solid #2b64a8; font-size: 8pt; line-height: 1.35; white-space: pre-wrap; break-inside: avoid; }
+ul { margin: 0 0 6pt; padding-left: 14pt; }
+li { margin-bottom: 1.8pt; }
+h1 { font-size: 21pt; margin: 6pt 0 6pt; color: #15233a; break-after: avoid; }
+h1.pb { break-before: page; }
+h2 { font-size: 12.5pt; margin: 11pt 0 4pt; color: #2b64a8; break-after: avoid; }
+h3 { font-size: 10pt; margin: 7pt 0 2pt; color: #15233a; break-after: avoid; }
+table { width: 100%; border-collapse: collapse; margin: 3pt 0 8pt; font-size: 8.3pt; line-height: 1.32; }
+thead { display: table-header-group; }
+th { background: #15233a; color: #fff; text-align: left; padding: 3pt 5pt; border: 1px solid #15233a; }
+td { padding: 3pt 5pt; border: 1px solid #cfd6e0; vertical-align: top; }
+tbody tr:nth-child(even) td { background: #f3f6fa; }
+tr { break-inside: avoid; }
+td:first-child { font-weight: 600; }
+.cover { background: #15233a; color: #fff; text-align: center; padding: 34pt 20pt 26pt; margin: 30pt 0 22pt; }
+.cover h1 { color: #fff; font-size: 30pt; margin: 0 0 14pt; line-height: 1.12; }
+.cover p { color: #d6deea; font-size: 11pt; margin: 0 0 7pt; }
+.box { margin: 4pt 0 8pt; padding: 5pt 9pt; border-left: 3pt solid #2b64a8; background: #eef3fa; break-inside: avoid; }
+.prova { border-left-color: #b45309; background: #fdf6ec; }
+.prova > b:first-child { color: #b45309; }
+.odi { border-left-color: #047857; background: #ecf8f3; }
+.odi > b:first-child { color: #047857; }
+.alerta { border-left-color: #b23a2a; background: #fcf1ef; }
+.alerta > b:first-child { color: #b23a2a; }
+.sprint { break-inside: avoid-page; }
+.sprint h2 { border-bottom: 1.5pt solid #2b64a8; padding-bottom: 2pt; }
+.meta { font-size: 8.2pt; color: #4b5563; margin: -1pt 0 4pt; }
+.lbl { font-size: 8pt; text-transform: uppercase; letter-spacing: .4pt; color: #6b7280; margin: 5pt 0 1pt; font-weight: 600; }
+.ok { color: #047857; font-weight: 700; }
+.warn { color: #b45309; font-weight: 700; }
+.no { color: #b23a2a; font-weight: 700; }
+.small { font-size: 8pt; color: #4b5563; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>CRYPTO<br>LAKEHOUSE 360</h1>
+  <p>Plano de projeto · Engenharia de Dados de ponta a ponta</p>
+  <p>Python · PySpark · AWS S3 (Free Plan) · Databricks Free Edition · Delta Lake · Unity Catalog · Lakeflow</p>
+  <p>DOCUMENTAÇÃO DE DESENVOLVIMENTO · VERSÃO 2.0 · 19/11/2026</p>
+</div>
+
+<h2>Propósito deste documento</h2>
+<p>Guia de execução do Crypto Lakehouse 360, um projeto com dois objetivos: <b>migrar a prática de um desenvolvedor ODI/Oracle para cloud com Databricks e PySpark</b> e <b>cobrir na prática o conteúdo da Databricks Certified Data Engineer Associate</b>. Cada sprint diz o que construir, o que cai na prova, como aquilo era feito no ODI e como saber que está pronto.</p>
+<p><b>Regra de aprendizagem:</b> não aceitar código que você não consiga explicar. A IA explica e revisa; quem programa é você.</p>
+
+<h2>Como ler cada sprint</h2>
+<table>
+<thead><tr><th style="width:22%">Bloco</th><th>O que traz</th></tr></thead>
+<tbody>
+<tr><td>Demandas</td><td>O que construir, em passos pequenos.</td></tr>
+<tr><td>Cai na prova</td><td>Os pontos do exam guide que a sprint pratica, já na forma em que costumam aparecer nas questões.</td></tr>
+<tr><td>No ODI era</td><td>O equivalente no seu mundo, para ancorar o conceito novo no que você já domina.</td></tr>
+<tr><td>Aceite</td><td>Como provar que terminou. Sem evidência no repositório, não terminou.</td></tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h1 class="pb">0. O que mudou da v1</h1>
+<p>A v1 estava bem organizada. As correções abaixo vêm de três conferências feitas em 19/11/2026: a página oficial de limites do Free Edition, a documentação da API da Kraken e o exam guide vigente.</p>
+<table>
+<thead><tr><th style="width:21%">Ponto da v1</th><th style="width:40%">Problema</th><th>Na v2</th></tr></thead>
+<tbody>
+<tr><td>Kraken como fonte primária de velas</td><td>O endpoint OHLC da Kraken devolve só as <b>últimas 720 velas</b> (30 dias em 1h), seja qual for o <code>since</code>. Não há como montar histórico nem SMA 200 no 1d.</td><td><b>Binance</b> como fonte principal: histórico completo em <code>data.binance.vision</code> e incremental em <code>data-api.binance.vision</code>, os dois já testados de dentro do Databricks. Kraken vira 2ª fonte no Sprint 4 para praticar normalização.</td></tr>
+<tr><td>S3 lido direto pelo Databricks</td><td>O Free Edition restringe a internet de saída a domínios confiáveis e não aceita storage próprio do workspace. Não há garantia de que ele leia o seu bucket.</td><td>S3 continua como <b>Landing</b> (AWS Free Plan). O núcleo do lakehouse fica em <b>Volumes e tabelas gerenciadas</b> do Unity Catalog. O Sprint 0 testa três caminhos de ponte e escolhe o que funcionar.</td></tr>
+<tr><td>Região sa-east-1</td><td>São Paulo é a região mais cara do S3, e o workspace Free roda nos EUA: leitura cruzada entre regiões.</td><td>Bucket na mesma região do workspace (conferir na URL; tende a ser us-east-1 ou us-west-2).</td></tr>
+<tr><td>MERGE INTO feito à mão na Silver</td><td>A prova cobra <b>AUTO CDC INTO</b> (ex-APPLY CHANGES) dentro do Spark Declarative Pipelines, com SCD 1 e 2.</td><td>Silver com AUTO CDC no pipeline. O MERGE manual fica como exercício de comparação, porque também cai.</td></tr>
+<tr><td>Spark Declarative Pipelines "avaliar" no Sprint 5</td><td>Streaming table, materialized view e expectations estão entre os temas mais cobrados (ingestão + transformação = 43% da prova).</td><td>O pipeline declarativo é o eixo do projeto desde a Bronze (Sprint 2).</td></tr>
+<tr><td>CI/CD só no Sprint 7</td><td>Deixar bundle para o fim faz você configurar tudo à mão e depois refazer.</td><td>Bundle mínimo no Sprint 0; cada sprint acrescenta recursos ao <code>databricks.yml</code>. O Sprint 8 fecha testes e deploy automático.</td></tr>
+<tr><td>Governança espalhada</td><td>É 15% da prova e o único tópico em que você ainda não fez o curso oficial.</td><td>Sprint próprio (6), com row filter, column mask, ABAC, lineage e system tables.</td></tr>
+<tr><td>EMA, RSI, MACD e ATR com window functions</td><td>São médias <b>recursivas</b> (cada valor depende do anterior). <code>AVG() OVER</code> não calcula isso.</td><td>SMA, retornos e volatilidade com window functions; EMA, RSI, MACD e ATR com <code>applyInPandas</code> por ativo. Ensina quando sair do SQL.</td></tr>
+<tr><td>Temas da prova ausentes</td><td>Faltavam COPY INTO, read_files, VARIANT, controle de fluxo do Jobs (if/else, for each, run if, repair), gatilhos por chegada de arquivo e atualização de tabela, liquid clustering, tipos de compute, Databricks Connect.</td><td>Todos encaixados em alguma sprint. O que o Free Edition não deixa praticar está listado no mapa da seção 6 como estudo teórico.</td></tr>
+<tr><td>Exam guide de 04/mai/2026</td><td>O guia foi atualizado em 06/ago/2026. A prova tem 45 questões que valem nota e até 10 extras sem valor, e existe em português.</td><td>Referência atualizada e glossário inglês/português no fim, já que a prova será feita em português.</td></tr>
+<tr><td>Frequência de coleta</td><td>Se a cota diária estourar, o Free Edition desliga o compute até o dia seguinte.</td><td>Começar com Job a cada 4h e só aumentar depois de medir consumo.</td></tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h1 class="pb">1. Visão do produto</h1>
+<p>Plataforma que coleta dados públicos de mercado cripto, guarda o payload original num data lake em S3, processa no Databricks em camadas Bronze, Silver e Gold, e entrega indicadores, um dashboard e um assistente que responde perguntas sobre os dados informando de quando eles são.</p>
+<h2>Entregáveis finais</h2>
+<ul>
+<li>Landing no S3 (Free Plan): payload bruto, imutável, organizado por fonte, dataset e data.</li>
+<li>Catálogo <code>crypto360</code> no Unity Catalog com Bronze, Silver e Gold em Delta.</li>
+<li>Um pipeline declarativo (Lakeflow Spark Declarative Pipelines) com expectations e AUTO CDC.</li>
+<li>Job orquestrado (Lakeflow Jobs) com agenda, parâmetros, retries, controle de fluxo e notificação.</li>
+<li>Indicadores técnicos e Crypto Market Score experimental (0 a 100) com metodologia versionada e testada.</li>
+<li>Dashboard AI/BI e espaço Genie restritos à Gold.</li>
+<li>Repositório público com bundle, testes, CI/CD no GitHub Actions, decisões e runbook.</li>
+</ul>
+<h2>Escopo e limites</h2>
+<p>Projeto educacional e de portfólio. Não executa ordens, não custodia ativos, não recomenda investimento. Nenhum dado de cliente real (o Free Edition é para uso não comercial). Dados de pessoas, quando precisarmos para praticar governança, serão inventados.</p>
+
+<!-- ============================================================ -->
+<h1>2. Arquitetura-alvo</h1>
+<pre>
+ Binance (data-api / data.binance.vision)      Kraken (Sprint 4, opcional)
+                 │
+                 ▼
+ Coletor Python (requests + Boto3)  ── roda no GitHub Actions (agendado) e como tarefa de Job
+                 │
+                 ▼
+ S3 Landing  s3://crypto360-landing-&lt;sufixo&gt;/landing/binance/klines/symbol=BTCUSDT/interval=1h/date=2026-11-19/&lt;run_id&gt;.json
+                 │   ponte escolhida no Sprint 0 (A, B ou C)
+                 ▼
+ Volume UC   /Volumes/crypto360/landing/raw/...
+                 │   Auto Loader (STREAM read_files)
+                 ▼
+ Pipeline declarativo:  BRONZE (streaming tables) → SILVER (expectations + AUTO CDC) → GOLD (materialized views)
+                 │
+                 ▼
+ Consumo: Databricks SQL · Dashboard AI/BI · Genie        Orquestração: Lakeflow Jobs    Deploy: Bundles + GitHub Actions
+</pre>
+<table>
+<thead><tr><th style="width:15%">Camada</th><th style="width:40%">Responsabilidade</th><th>Tecnologia</th></tr></thead>
+<tbody>
+<tr><td>Fonte</td><td>Velas OHLCV, metadados de símbolos (exchangeInfo).</td><td>Binance REST e arquivos históricos; Kraken depois.</td></tr>
+<tr><td>Coletor</td><td>Chamar a API, respeitar limites, repetir em erro, gravar sem transformar.</td><td>Python, <code>requests</code>, Boto3, GitHub Actions com OIDC.</td></tr>
+<tr><td>Landing S3</td><td>Cópia fiel e imutável do que a fonte respondeu. Base para auditoria e reprocessamento.</td><td>Amazon S3: bucket privado, versionamento, SSE-S3, lifecycle.</td></tr>
+<tr><td>Landing UC</td><td>Arquivos dentro da governança do Unity Catalog, prontos para o Auto Loader.</td><td>Volume gerenciado (ou externo, se a ponte A funcionar).</td></tr>
+<tr><td>Bronze</td><td>Dado bruto em Delta, com metadados de origem e dados que não couberam no schema.</td><td>Streaming tables, Auto Loader, VARIANT.</td></tr>
+<tr><td>Silver</td><td>Tipos corretos, UTC, regras de qualidade, quarentena, uma linha por chave.</td><td>Expectations, AUTO CDC SCD 1 e SCD 2.</td></tr>
+<tr><td>Gold</td><td>Agregações por timeframe, indicadores, score, frescor dos dados.</td><td>Materialized views, window functions, <code>applyInPandas</code>.</td></tr>
+<tr><td>Consumo</td><td>Dashboard e perguntas em linguagem natural.</td><td>SQL warehouse 2X-Small, AI/BI, Genie.</td></tr>
+<tr><td>Entrega</td><td>Versionar, testar, implantar em dev e prod.</td><td>Git folders, Declarative Automation Bundles, CLI, GitHub Actions.</td></tr>
+</tbody>
+</table>
+
+<h2>A ponte S3 → Databricks (decidida no Sprint 0)</h2>
+<table>
+<thead><tr><th style="width:9%">Caminho</th><th style="width:38%">Como funciona</th><th style="width:28%">O que você aprende</th><th>Quando usar</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>Storage credential (IAM role) + external location no Unity Catalog apontando para o bucket. Auto Loader lê <code>s3://</code> direto, ou via volume externo.</td><td>O desenho de empresa e o tema de governança da prova (external location, storage credential, tabela externa).</td><td>Se o Free Edition aceitar criar a credencial e alcançar o S3. Melhor caso.</td></tr>
+<tr><td>B</td><td>Tarefa do Job usa Boto3 (chave de leitura num secret scope) e copia os objetos novos do S3 para o volume gerenciado.</td><td>Secrets, Boto3 dentro do Databricks, cópia incremental por marca d'água.</td><td>Se não houver external location mas o domínio do S3 responder.</td></tr>
+<tr><td>C</td><td>O coletor no GitHub Actions grava no S3 e também no volume, pela Files API do Databricks.</td><td>Files API, autenticação de automação (token ou service principal) no CI.</td><td>Se o Databricks não alcançar o S3 de jeito nenhum.</td></tr>
+</tbody>
+</table>
+<div class="box alerta"><b>Validade do Free Plan da AWS.</b> A conta recebe de US$ 100 a US$ 200 em créditos e fecha em 6 meses ou quando os créditos acabarem. Não há cobrança enquanto você não passar para o plano pago. Como o núcleo está nos Volumes, o fim da conta AWS não apaga o lakehouse; só para a Landing.</div>
+
+<h2>Fontes e conectividade</h2>
+<table>
+<thead><tr><th style="width:24%">Domínio</th><th style="width:16%">Status</th><th>Uso</th></tr></thead>
+<tbody>
+<tr><td><code>data-api.binance.vision</code></td><td><span class="ok">OK</span> (testado em 05/out)</td><td>Velas recentes (<code>/api/v3/klines</code>, até 1000 por chamada) e <code>exchangeInfo</code>.</td></tr>
+<tr><td><code>data.binance.vision</code></td><td><span class="ok">OK</span> (testado em 05/out)</td><td>Histórico mensal em ZIP com CSV e arquivo <code>.CHECKSUM</code>.</td></tr>
+<tr><td><code>api.binance.com</code></td><td><span class="no">451</span></td><td>A Binance bloqueia IP dos EUA. Não usar.</td></tr>
+<tr><td><code>api.kraken.com</code></td><td><span class="warn">A testar</span></td><td>2ª fonte, últimas 720 velas.</td></tr>
+<tr><td><code>api.coingecko.com</code></td><td><span class="warn">A testar</span></td><td>Market cap e ranking; exige chave demo (pratica secret scope).</td></tr>
+<tr><td><code>s3.&lt;região&gt;.amazonaws.com</code></td><td><span class="warn">A testar</span></td><td>Define a ponte A, B ou C.</td></tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h1 class="pb">3. Do ODI para o Databricks</h1>
+<p>Quase tudo o que você faz no ODI tem equivalente. O que muda é onde a lógica vive (código versionado em vez de repositório ODI) e como o motor executa (distribuído e preguiçoso em vez de SQL enviado ao Oracle).</p>
+<table>
+<thead><tr><th style="width:27%">No ODI</th><th style="width:30%">No Databricks</th><th>Diferença que importa</th></tr></thead>
+<tbody>
+<tr><td>Topologia: data server, schema físico e lógico</td><td>Unity Catalog: <code>catalogo.schema.tabela</code>, connections, external locations</td><td>O UC governa o dado em si (acesso, auditoria, linhagem), não só o metadado do ETL.</td></tr>
+<tr><td>Contextos (DEV, HML, PRD)</td><td><code>targets</code> do bundle</td><td>O mesmo código vai para cada ambiente; o que muda são variáveis por target.</td></tr>
+<tr><td>LKM (carga para staging)</td><td>Auto Loader, COPY INTO, Lakeflow Connect</td><td>O checkpoint lembra o que já foi lido. Acabou a tabela de controle de arquivo processado.</td></tr>
+<tr><td>Tabelas C$ e I$</td><td>Landing e Bronze</td><td>Não são temporárias: ficam como histórico consultável e reprocessável.</td></tr>
+<tr><td>IKM Incremental Update / Oracle Merge</td><td><code>MERGE INTO</code> ou <code>AUTO CDC ... STORED AS SCD TYPE 1</code></td><td>AUTO CDC trata eventos fora de ordem pelo <code>SEQUENCE BY</code>.</td></tr>
+<tr><td>IKM Slowly Changing Dimension</td><td><code>AUTO CDC ... STORED AS SCD TYPE 2</code></td><td>No ODI você marcava cada coluna (add row / overwrite on change); aqui é <code>TRACK HISTORY ON</code>.</td></tr>
+<tr><td>CKM com flow control e tabela E$</td><td>Expectations (warn, drop, fail) + tabela de quarentena</td><td>A expectation com DROP só conta a linha descartada; para guardar, você cria a quarentena.</td></tr>
+<tr><td>CKM static control / constraint no Oracle</td><td>Constraint Delta <code>CHECK</code> e <code>NOT NULL</code></td><td>Violou, a escrita inteira falha.</td></tr>
+<tr><td>Journalizing (J$, consistent set)</td><td>Change Data Feed, AUTO CDC</td><td>Sem trigger nem tabela J$: o log do Delta é a fonte das mudanças.</td></tr>
+<tr><td>Mapping</td><td>Definição de dataset no pipeline, ou notebook com DataFrame</td><td>Declarativo: você diz o resultado, o pipeline resolve ordem e dependências.</td></tr>
+<tr><td>Package e Load Plan</td><td>Lakeflow Job: tarefas + DAG</td><td>Paralelo é o padrão quando não há dependência.</td></tr>
+<tr><td>Restart do Load Plan a partir do passo com erro</td><td>Repair run</td><td>Reexecuta só a tarefa que falhou e as dependentes.</td></tr>
+<tr><td>Passo de exceção do Load Plan</td><td>Run if (<code>At least one failed</code>, <code>All done</code>)</td><td>A condição fica na tarefa, não num ramo separado.</td></tr>
+<tr><td>Variáveis com refresh</td><td>Job parameters, task values, widgets</td><td>Task value passa dado de uma tarefa para outra.</td></tr>
+<tr><td>Cenário compilado e regenerado</td><td>Recurso implantado pelo <code>bundle deploy</code></td><td>O fonte está no Git; o deploy recria o recurso a partir dele.</td></tr>
+<tr><td>Smart Export/Import</td><td>Git folders + bundle + CI/CD</td><td>Promoção por pull request, com testes antes de entrar.</td></tr>
+<tr><td>Agente ODI</td><td>Compute (serverless, job cluster, SQL warehouse)</td><td>Compute separado do storage: liga, processa, desliga.</td></tr>
+<tr><td>Operator</td><td>Histórico de runs do Job e event log do pipeline</td><td>O event log é uma tabela que você consulta com SQL.</td></tr>
+<tr><td>Security Manager</td><td><code>GRANT</code>/<code>REVOKE</code> no Unity Catalog</td><td>Permissão desce na hierarquia catálogo → schema → tabela.</td></tr>
+<tr><td>Partição, índice, DBMS_STATS</td><td>Liquid clustering, data skipping, <code>ANALYZE</code>, predictive optimization</td><td>Não existe índice. A performance vem de ler menos arquivos.</td></tr>
+<tr><td>Flashback</td><td>Time travel e <code>RESTORE</code></td><td>Limitado pela retenção do <code>VACUUM</code> (7 dias por padrão).</td></tr>
+</tbody>
+</table>
+<h2>Cinco mudanças de mentalidade</h2>
+<table>
+<thead><tr><th style="width:24%">Hábito Oracle/ODI</th><th>No Spark</th></tr></thead>
+<tbody>
+<tr><td>Cada comando executa na hora</td><td><b>Avaliação preguiçosa.</b> <code>select</code>, <code>filter</code> e <code>join</code> só montam um plano; nada roda até uma ação (<code>count</code>, <code>write</code>, <code>display</code>).</td></tr>
+<tr><td>O banco cuida dos arquivos</td><td>Arquivos Parquet <b>imutáveis</b> + log de transações do Delta. UPDATE reescreve arquivos; muitos arquivos pequenos deixam tudo lento.</td></tr>
+<tr><td>Cursor e linha a linha em PL/SQL</td><td>Sempre em conjunto. <code>collect()</code> traz tudo para o driver e é a causa mais comum de falta de memória.</td></tr>
+<tr><td>Índice resolve consulta lenta</td><td>Ler menos: filtrar cedo, clustering pela coluna do filtro, evitar shuffle, broadcast de tabela pequena.</td></tr>
+<tr><td>Servidor ligado o tempo todo</td><td>Compute por demanda. Serverless sobe em segundos e cobra só o uso; aqui ele também consome a cota diária do Free.</td></tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h1 class="pb">4. Dados e modelo</h1>
+<h2>Catálogo e schemas</h2>
+<table>
+<thead><tr><th style="width:24%">Objeto</th><th>Conteúdo</th></tr></thead>
+<tbody>
+<tr><td><code>crypto360.landing</code></td><td>Volume <code>raw</code> com os arquivos vindos do S3.</td></tr>
+<tr><td><code>crypto360.bronze</code></td><td>Streaming tables com o payload como chegou.</td></tr>
+<tr><td><code>crypto360.silver</code></td><td>Tabelas limpas, quarentena e SCD.</td></tr>
+<tr><td><code>crypto360.gold</code></td><td>Materialized views e views de consumo.</td></tr>
+<tr><td><code>crypto360.ops</code></td><td>Log de execução, teste de conectividade, metodologia do score.</td></tr>
+<tr><td><code>crypto360_dev</code></td><td>Mesmo desenho, para o target de desenvolvimento (Sprint 8).</td></tr>
+</tbody>
+</table>
+
+<h2>Tabelas</h2>
+<table>
+<thead><tr><th style="width:27%">Tabela</th><th style="width:12%">Tipo</th><th style="width:26%">Chave / grão</th><th>Colunas principais</th></tr></thead>
+<tbody>
+<tr><td>bronze.binance_klines</td><td>Streaming table</td><td>uma linha por vela por arquivo</td><td>payload (VARIANT), _source_file, _ingested_at, _rescued_data</td></tr>
+<tr><td>bronze.binance_klines_history</td><td>Streaming table</td><td>uma linha por linha de CSV</td><td>12 colunas do CSV com schema explícito</td></tr>
+<tr><td>bronze.binance_exchange_info</td><td>Streaming table</td><td>um snapshot por dia</td><td>payload (VARIANT)</td></tr>
+<tr><td>silver.klines</td><td>AUTO CDC SCD 1</td><td>exchange, symbol, interval, open_time</td><td>open, high, low, close, volume, quote_volume, trades_count, taker_buy_base, taker_buy_quote, close_time, is_closed, _ingested_at</td></tr>
+<tr><td>silver.klines_quarantine</td><td>Streaming table</td><td>uma linha por registro rejeitado</td><td>registro original + motivo</td></tr>
+<tr><td>silver.symbols</td><td>AUTO CDC SCD 2</td><td>symbol + vigência</td><td>status, base_asset, quote_asset, tick_size, __START_AT, __END_AT</td></tr>
+<tr><td>gold.klines_4h, gold.klines_1d</td><td>Materialized view</td><td>symbol, open_time do período</td><td>OHLCV agregado só de períodos completos</td></tr>
+<tr><td>gold.indicators</td><td>Materialized view ou tabela</td><td>symbol, interval, open_time</td><td>retornos, SMA 20/50/200, EMA 9/21, RSI 14, MACD, ATR 14, volatilidade, volume relativo</td></tr>
+<tr><td>gold.market_score</td><td>Tabela</td><td>symbol, interval, open_time, methodology_version</td><td>score e cada componente</td></tr>
+<tr><td>gold.data_freshness</td><td>View</td><td>symbol, interval</td><td>última vela fechada e atraso em horas</td></tr>
+<tr><td>ops.score_methodology</td><td>Tabela</td><td>methodology_version</td><td>pesos, fórmula, data de vigência</td></tr>
+</tbody>
+</table>
+
+<h2>Regras de dados</h2>
+<ul>
+<li><b>Tempo:</b> tudo em UTC. Separar <code>open_time</code> (tempo do evento na fonte) de <code>_ingested_at</code> (tempo do pipeline).</li>
+<li><b>Unidade do timestamp:</b> a API devolve milissegundos. A Binance anunciou que os arquivos spot de <code>data.binance.vision</code> passaram a usar <b>microssegundos</b> a partir de 2025. Conferir no primeiro arquivo e tratar na Silver; é exatamente o tipo de erro que a regra de alinhamento abaixo pega.</li>
+<li><b>Vela em formação:</b> a última vela devolvida ainda está aberta. Gravar com <code>is_closed = false</code>; o AUTO CDC atualiza quando ela fechar. Indicadores e score usam só velas fechadas.</li>
+<li><b>Tipos:</b> preço e volume em <code>DECIMAL(38,12)</code> na Silver (valor financeiro exato); indicadores em <code>DOUBLE</code> na Gold (cálculo estatístico).</li>
+<li><b>Lacunas:</b> detectar com <code>lead(open_time)</code> e listar numa view. Nunca preencher sem avisar.</li>
+</ul>
+
+<h2>Regras de qualidade</h2>
+<table>
+<thead><tr><th style="width:44%">Regra</th><th style="width:20%">Ação</th><th>Por quê</th></tr></thead>
+<tbody>
+<tr><td><code>open_time IS NOT NULL</code> e <code>symbol IS NOT NULL</code></td><td>DROP + quarentena</td><td>Sem chave não há como deduplicar.</td></tr>
+<tr><td><code>high &gt;= greatest(open, close, low)</code> e <code>low &lt;= least(open, close)</code></td><td>DROP + quarentena</td><td>Vela impossível.</td></tr>
+<tr><td>Preços &gt; 0, volume &gt;= 0</td><td>DROP + quarentena</td><td>Valor impossível.</td></tr>
+<tr><td><code>open_time</code> alinhado ao intervalo (múltiplo de 3.600.000 ms no 1h)</td><td>FAIL UPDATE</td><td>Indica erro de unidade (ms × µs): parar o pipeline em vez de gravar lixo.</td></tr>
+<tr><td><code>close_time = open_time + intervalo − 1 ms</code></td><td>WARN</td><td>Contar e investigar, sem bloquear.</td></tr>
+<tr><td>Atraso da última vela fechada &gt; 6h</td><td>Tarefa SQL do Job falha</td><td>Dado velho não pode chegar ao dashboard como se fosse atual.</td></tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h1 class="pb">5. Plano por sprints</h1>
+<p>Cada sprint termina com: código no repositório, teste rodando, evidência em <code>docs/evidencias/</code> (consulta, print ou log), decisão registrada em <code>docs/decisions.md</code> e respostas para as perguntas de domínio da seção 8. O prazo segue a entrega, não o calendário; ajustar à cota do Free Edition e à data da prova.</p>
+
+<div class="sprint">
+<h2>SPRINT 0 · Fundação: contas, repositório, catálogo e conectividade</h2>
+<p class="meta">Domínios: Plataforma (6%) · CI/CD (10%) · Governança (15%)</p>
+<p><b>Objetivo:</b> deixar o ambiente pronto, versionado desde o primeiro commit, e descobrir de verdade o que o Free Edition alcança.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li>Repositório público <code>crypto-lakehouse-360</code> no GitHub; clonar como <b>Git folder</b> no workspace.</li>
+<li>AWS no <b>Free Plan</b>: MFA no usuário raiz, um usuário administrativo próprio, alerta no AWS Budgets em US$ 1.</li>
+<li>Bucket privado na região do workspace: Block Public Access, versionamento, SSE-S3, lifecycle que apaga versões antigas após 30 dias.</li>
+<li>IAM: role para o GitHub Actions via <b>OIDC</b> com permissão só de <code>s3:PutObject</code> no prefixo <code>landing/</code>; policy só de leitura para o Databricks.</li>
+<li>Databricks CLI com perfil <code>crypto360</code>; <code>databricks.yml</code> mínimo com target <code>dev</code>; <code>bundle validate</code> e <code>bundle deploy</code>.</li>
+<li>SQL: <code>CREATE CATALOG crypto360</code>, schemas da seção 4, <code>CREATE VOLUME crypto360.landing.raw</code>.</li>
+<li>Job <code>conectividade</code>: faz GET em cada domínio da tabela de fontes e grava status e latência em <code>ops.connectivity_check</code>.</li>
+<li>Testar a ponte A (storage credential + external location). Se falhar, testar B. Registrar o caminho escolhido como ADR.</li>
+</ul>
+<div class="box prova"><b>Cai na prova.</b> Control plane fica na conta da Databricks; compute clássico fica na sua conta de nuvem; serverless fica na conta da Databricks. Tipos de compute: all-purpose (desenvolver, cobra ocioso), job cluster (produção barata, demora a subir), serverless (sobe em segundos), SQL warehouse (só SQL, muitos usuários). Nome em três níveis no UC. Volume gerenciado × externo. <code>bundle validate</code> só confere; <code>deploy</code> cria e não executa; <code>run</code> executa.</div>
+<div class="box odi"><b>No ODI era.</b> Montar a topologia (data servers, schemas físicos e lógicos) e os contextos. Aqui a topologia é o catálogo e os contextos são targets do bundle.</div>
+<p><b>Aceite:</b> bundle implantado pelo CLI; catálogo, schemas e volume existem; <code>ops.connectivity_check</code> preenchida; ponte escolhida e documentada; nenhum segredo no Git (<code>.databrickscfg</code> e <code>.env</code> no <code>.gitignore</code>).</p>
+</div>
+
+<div class="sprint">
+<h2>SPRINT 1 · Coletor REST e Landing no S3</h2>
+<p class="meta">Domínios: Ingestão (21%) · Troubleshooting (10%)</p>
+<p><b>Objetivo:</b> trazer as velas da Binance para o S3 sem perder nada e sem duplicar efeito ao reexecutar.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li>Módulo <code>src/crypto360/ingest/binance.py</code>: <code>fetch_klines(symbol, interval, start_ms, end_ms)</code> com <code>requests.Session</code>, timeout, retry com backoff em 429 e 5xx, leitura do header de peso, paginação por <code>startTime</code> (1000 velas por chamada).</li>
+<li>Gravar com Boto3 em <code>landing/binance/klines/symbol=…/interval=1h/date=…/&lt;run_id&gt;.json</code>, num envelope: fonte, endpoint, parâmetros, horário da requisição, payload. Sempre arquivo novo, nunca sobrescrever.</li>
+<li>Snapshot diário de <code>exchangeInfo</code> para BTCUSDT e ETHUSDT (alimenta o SCD 2 do Sprint 3).</li>
+<li>Backfill: ZIPs mensais de <code>data.binance.vision</code>, conferidos pelo <code>.CHECKSUM</code> (SHA-256) antes de subir.</li>
+<li>GitHub Actions com <code>schedule</code> a cada 4h e <code>workflow_dispatch</code>, assumindo a role por OIDC (sem chave fixa).</li>
+<li>O mesmo módulo também roda como tarefa de um Job no Databricks gravando no volume. É o cenário de prova "API sem conector" e serve de plano B.</li>
+<li>Testes com <b>moto</b> (S3 simulado) e respostas falsas: lista vazia, 429, 500, JSON inválido, falha de upload.</li>
+</ul>
+<div class="box prova"><b>Cai na prova.</b> Qual método para cada fonte: API ou banco sem conector → REST/JDBC em notebook + Job; SaaS e bancos com CDC → conector gerenciado do Lakeflow Connect; Kafka → conector standard; arquivo único → upload manual. Padrões batch, batch incremental e streaming. Senha nunca no código: <code>dbutils.secrets.get(scope, key)</code>. Arquivo não estruturado vai para volume.</div>
+<div class="box odi"><b>No ODI era.</b> Chamada de web service ou data server REST, <code>OdiFileCopy</code> para a área de staging e LKM File. A diferença é que aqui o arquivo bruto fica guardado para sempre.</div>
+<p><b>Aceite:</b> arquivos no S3 na estrutura combinada; reexecutar gera arquivo novo e não apaga histórico; erro HTTP registrado com <code>run_id</code>; testes passam sem internet.</p>
+</div>
+
+<div class="sprint">
+<h2>SPRINT 2 · Bronze: três formas de carregar e a definitiva</h2>
+<p class="meta">Domínios: Ingestão (21%) · Plataforma (6%)</p>
+<p><b>Objetivo:</b> entender na prática a diferença entre os métodos de carga, que é uma das perguntas mais frequentes da prova, e montar a Bronze no pipeline declarativo.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li>Ponte S3 → volume em funcionamento (A, B ou C).</li>
+<li>Laboratório: carregar a mesma pasta em três tabelas, com <b>CTAS + read_files</b>, <b>COPY INTO</b> e <b>Auto Loader</b> (<code>trigger(availableNow=True)</code>, <code>schemaLocation</code>, <code>checkpointLocation</code>). Rodar cada um duas vezes e comparar contagens.</li>
+<li>Pipeline <code>crypto360_medalhao</code> (um só, porque o Free permite um pipeline ativo por tipo) com a streaming table <code>bronze.binance_klines</code>: <code>STREAM read_files</code>, payload como <code>VARIANT</code>, <code>explode</code> do array de velas, <code>_metadata.file_path</code>, <code>current_timestamp()</code>.</li>
+<li>Streaming table do histórico CSV com schema explícito.</li>
+<li>Upload manual pela interface de um CSV pequeno de referência (lista de ativos acompanhados).</li>
+<li>Teste de schema evolution: soltar um arquivo com um campo a mais e ver o comportamento com <code>addNewColumns</code> e com <code>rescue</code>.</li>
+</ul>
+<div class="box prova"><b>Cai na prova.</b> CTAS + read_files relê tudo; COPY INTO é idempotente (não recarrega arquivo já lido; <code>force</code> recarrega); Auto Loader usa checkpoint e aguenta milhões de arquivos. Directory listing × file notification. <code>schemaEvolutionMode</code>: addNewColumns (falha, registra, inclui ao reiniciar), rescue (vai para <code>_rescued_data</code>), failOnNewColumns, none. JSON como STRING (<code>col:campo</code>), STRUCT (<code>col.campo</code>), VARIANT (<code>col:campo::tipo</code>). <code>explode</code> some com array vazio; <code>explode_outer</code> mantém. Serverless só aceita gatilho AvailableNow/Once.</div>
+<div class="box odi"><b>No ODI era.</b> LKM para C$ e uma tabela de controle (ou <code>OdiFileMove</code> para "processados") para não ler o mesmo arquivo duas vezes. Aqui o checkpoint faz esse controle.</div>
+<p><b>Aceite:</b> tabela comparativa dos três métodos em <code>docs/</code>; segunda execução do pipeline não relê arquivos; contagem da Bronze bate com a soma das linhas dos arquivos; arquivo com coluna extra não quebra o pipeline.</p>
+</div>
+
+<div class="sprint">
+<h2>SPRINT 3 · Silver: tipos, qualidade e AUTO CDC</h2>
+<p class="meta">Domínios: Transformação e modelagem (22%) · Ingestão (21%)</p>
+<p><b>Objetivo:</b> uma linha correta por vela, com rejeitados guardados e motivo registrado.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li>View de limpeza: epoch → timestamp UTC, cast para DECIMAL, <code>is_closed</code>, união da Bronze da API com a do histórico.</li>
+<li>Expectations conforme a tabela de qualidade (warn, drop, fail) e streaming table de quarentena com as condições invertidas e o motivo.</li>
+<li><code>AUTO CDC INTO silver.klines KEYS (exchange, symbol, interval, open_time) SEQUENCE BY _ingested_at STORED AS SCD TYPE 1</code>.</li>
+<li><code>silver.symbols</code> como SCD 2 a partir do <code>exchangeInfo</code>.</li>
+<li>Comparação em notebook: o mesmo resultado com <code>MERGE INTO ... WHEN MATCHED AND s._ingested_at &gt; t._ingested_at</code>. Entender por que o AUTO CDC é mais seguro com eventos fora de ordem.</li>
+<li>View <code>silver.klines_gaps</code> com <code>lead()</code>.</li>
+<li>Funções de limpeza em <code>src/</code> com teste unitário (<code>assertDataFrameEqual</code>).</li>
+</ul>
+<div class="box prova"><b>Cai na prova.</b> <code>EXPECT</code> grava e conta; <code>ON VIOLATION DROP ROW</code> descarta e segue; <code>ON VIOLATION FAIL UPDATE</code> para o pipeline; constraint <code>CHECK</code> faz a escrita inteira falhar. AUTO CDC com SCD 1 e SCD 2. <code>MERGE WITH SCHEMA EVOLUTION</code>. <code>= NULL</code> nunca é verdadeiro; use <code>IS NULL</code>. <code>TRY_CAST</code> devolve NULL no erro. <code>distinct()</code> × <code>dropDuplicates(["chave"])</code>. Full refresh zera e reprocessa tudo.</div>
+<div class="box odi"><b>No ODI era.</b> CKM com flow control e tabela E$ (expectations + quarentena), IKM Incremental Update (SCD 1) e IKM Slowly Changing Dimension (SCD 2).</div>
+<p><b>Aceite:</b> consulta de duplicidade pela chave retorna zero; vela em formação é atualizada quando fecha; quarentena com motivo; lacunas listadas; rodar duas vezes não muda contagem.</p>
+</div>
+
+<div class="sprint">
+<h2>SPRINT 4 · Gold: agregações, indicadores e score</h2>
+<p class="meta">Domínios: Transformação e modelagem (22%)</p>
+<p><b>Objetivo:</b> camada de consumo confiável, com cálculos conferidos por uma segunda implementação.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li>Materialized views 4h e 1d a partir do 1h: <code>min_by(open, open_time)</code>, <code>max_by(close, open_time)</code>, <code>max(high)</code>, <code>min(low)</code>, <code>sum(volume)</code>, só períodos completos.</li>
+<li>Window functions: retornos (<code>lag</code>), SMA 20/50/200 (<code>ROWS BETWEEN 19 PRECEDING AND CURRENT ROW</code>), volatilidade, volume relativo.</li>
+<li>EMA, RSI (Wilder), MACD e ATR com <code>groupBy("symbol", "interval").applyInPandas(...)</code>.</li>
+<li>Teste: amostra conferida contra pandas puro, tolerância 1e-6.</li>
+<li>Score v0 de 0 a 100 (tendência, momento, volatilidade, volume) com pesos em <code>ops.score_methodology</code>.</li>
+<li>View <code>gold.data_freshness</code>.</li>
+<li>Opcional: Kraken como 2ª fonte (<code>XXBTZUSD</code> → <code>BTC/USD</code>) e join com a Binance para comparar o fechamento entre exchanges.</li>
+</ul>
+<div class="box prova"><b>Cai na prova.</b> View (não guarda, recalcula a cada leitura) × materialized view (guarda, refresh incremental quando possível) × streaming table (só acrescenta) × tabela (quando o seu job grava). Tipos de join: inner, left, left_anti, cross; <code>broadcast()</code> evita shuffle. <code>union</code> casa por posição e mantém duplicatas; <code>unionByName</code> casa por nome; SQL <code>UNION</code> remove duplicatas. <code>count("*")</code> × <code>count("col")</code>; <code>approx_count_distinct</code>.</div>
+<div class="box odi"><b>No ODI era.</b> Componente Aggregate e funções analíticas do Oracle (<code>OVER</code>), que funcionam igual no Spark SQL. O que muda é a execução distribuída: a janela particionada por símbolo roda em paralelo.</div>
+<p><b>Aceite:</b> indicadores batem com o pandas; event log mostra refresh incremental das materialized views; metodologia do score documentada com versão.</p>
+</div>
+
+<div class="sprint">
+<h2>SPRINT 5 · Lakeflow Jobs: orquestração ponta a ponta</h2>
+<p class="meta">Domínios: Lakeflow Jobs (16%) · Troubleshooting (10%)</p>
+<p><b>Objetivo:</b> rodar tudo sozinho, com falha visível e recuperação sem retrabalho. É o sprint que mais pratica questões de prova por hora de trabalho.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li>Job <code>crypto360_diario</code> definido no bundle:
+  <ul>
+  <li><b>for each</b> símbolo na ponte/coleta (concorrência até 5, limite do Free);</li>
+  <li>tarefa de <b>pipeline</b> para o refresh do medalhão;</li>
+  <li>tarefa <b>SQL file</b> (arquivo no Git) que falha se houver duplicata ou atraso;</li>
+  <li><b>if/else</b> pelo task value <code>novas_velas</code>: se zero, pula o refresh do dashboard;</li>
+  <li>tarefa de limpeza com <b>Run if: All done</b>.</li>
+  </ul></li>
+<li>Job parameters (<code>{{job.parameters.interval}}</code>), retry de 2 vezes com intervalo na coleta, timeout, notificação por e-mail em falha.</li>
+<li>Gatilho agendado a cada 4h; job secundário com gatilho <b>table update</b> em <code>silver.klines</code>; teste de <b>file arrival</b> no volume.</li>
+<li>Falha forçada (parâmetro <code>simula_falha=true</code>), leitura do DAG e <b>repair run</b>.</li>
+<li><code>ops.batch_log</code>: run_id, tarefa, linhas, duração.</li>
+</ul>
+<div class="box prova"><b>Cai na prova.</b> Tarefa notebook precisa de compute; SQL file precisa de SQL warehouse e arquivo salvo no workspace ou Git; dashboard precisa estar publicado. Run if: All succeeded (padrão), At least one succeeded, None failed, All done, At least one failed, All failed. Job parameter vence task parameter. Task values: <code>dbutils.jobs.taskValues.set</code> e <code>{{tasks.t1.values.k}}</code>. Gatilhos: scheduled, file arrival (sem custo ocioso), table update, continuous. A primeira tarefa com falha é a causa; as seguintes aparecem como "Upstream failed".</div>
+<div class="box odi"><b>No ODI era.</b> Load Plan com passos serial e paralelo, restart a partir do passo com erro, variáveis com refresh e o agendador do agente.</div>
+<p><b>Aceite:</b> job roda agendado e manual; falha forçada e repair documentados com print; notificação recebida; histórico de execuções consultável.</p>
+</div>
+
+<div class="sprint">
+<h2>SPRINT 6 · Governança e segurança</h2>
+<p class="meta">Domínios: Governança e segurança (15%) · fazer junto o curso oficial <i>Getting Started with Governance</i></p>
+<p><b>Objetivo:</b> controlar quem vê o quê e conseguir provar isso.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li>Ownership de cada objeto (<code>ALTER ... OWNER TO</code>).</li>
+<li>Grupo <code>analistas</code> com <code>USE CATALOG</code>, <code>USE SCHEMA</code> e <code>SELECT</code> só na Gold; testar acesso negado à Silver; <code>REVOKE</code>.</li>
+<li>Tabela <code>gold.watchlist_ficticia</code> com usuários <b>inventados</b>: column mask no e-mail, row filter por região e a mesma regra como política ABAC com tag governada.</li>
+<li>Gerenciada × externa: <code>DESCRIBE EXTENDED</code>, <code>DROP</code> e <code>UNDROP</code> numa tabela de teste. Se a ponte A funcionou, criar também uma tabela externa sobre o S3.</li>
+<li>Lineage no Catalog Explorer (Bronze → Gold) e consultas em system tables disponíveis (auditoria, execução de jobs, uso).</li>
+<li>Secret scope para a chave da CoinGecko e para a chave de leitura do S3 (ponte B).</li>
+<li>Job com <code>run_as</code> service principal, se o Free permitir.</li>
+</ul>
+<div class="box prova"><b>Cai na prova.</b> Gerenciada: o UC escolhe o local; <code>DROP</code> apaga os arquivos; <code>UNDROP</code> em até 7 dias. Externa: <code>LOCATION</code>; <code>DROP</code> apaga só o registro. <code>ALTER TABLE t SET MANAGED</code>. Permissão desce na hierarquia. Para ler: USE CATALOG + USE SCHEMA + SELECT; para gravar: MODIFY. <code>DENY</code> só existe no Hive metastore legado. Mask e row filter são por tabela; ABAC é uma política central por tag, que vale inclusive para tabelas futuras. Principals: usuário, grupo (recomendado), service principal (automação).</div>
+<div class="box odi"><b>No ODI era.</b> Security Manager, com perfis e permissões sobre objetos do repositório. No UC a permissão é sobre o dado, e vale para qualquer ferramenta que leia a tabela.</div>
+<p><b>Aceite:</b> teste de acesso negado documentado; mask e filter funcionando por grupo; print do lineage; zero segredo em notebook.</p>
+</div>
+
+<div class="sprint">
+<h2>SPRINT 7 · Otimização e troubleshooting</h2>
+<p class="meta">Domínios: Troubleshooting, monitoramento e otimização (10%) · Plataforma (6%)</p>
+<p><b>Objetivo:</b> justificar o layout com números e saber recuperar a tabela de um erro.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li><code>CLUSTER BY (symbol, open_time)</code> na Silver. Calcular por que particionar por data seria um erro: 2 ativos × 24 velas = 48 linhas por dia, o que gera arquivos minúsculos.</li>
+<li><code>DESCRIBE DETAIL</code> (número de arquivos e tamanho) antes e depois do <code>OPTIMIZE</code>; conferir se predictive optimization está ativa.</li>
+<li><code>DESCRIBE HISTORY</code>, time travel, <code>DELETE</code> "acidental" e <code>RESTORE</code>; <code>VACUUM</code> sem baixar a retenção.</li>
+<li>Query profile no SQL warehouse: mesma consulta com e sem filtro de símbolo, comparando arquivos lidos.</li>
+<li>Gerar skew de propósito num dataset sintético (uma chave com 90% das linhas) e localizar no profile.</li>
+<li><code>docs/runbook.md</code> com os erros reais do projeto: cota estourada, 429, schema mismatch, conflito de escrita concorrente no Delta.</li>
+</ul>
+<div class="box prova"><b>Cai na prova.</b> Skew: uma task muito mais lenta (máximo muito acima da mediana); corrige com AQE ou broadcast em join e salting em agregação. Shuffle alto: broadcast, filtrar antes. Spill: mais partições ou mais memória. Liquid clustering troca as chaves sem reescrever e não combina com partição nem Z-ORDER. Predictive optimization só em tabelas gerenciadas do UC. OOM no driver: <code>collect()</code>, <code>toPandas()</code>. <code>spark.sql.shuffle.partitions</code> padrão 200.</div>
+<div class="box alerta"><b>Limite do serverless.</b> A Spark UI clássica e a maioria das configurações <code>spark.*</code> não ficam disponíveis; você usa o query profile. As métricas de stage (skew, spill) você estuda pelo resumo da prova.</div>
+<div class="box odi"><b>No ODI era.</b> Partição e índice no Oracle, <code>DBMS_STATS</code>, plano de execução e Flashback.</div>
+<p><b>Aceite:</b> decisão de layout com números; <code>RESTORE</code> demonstrado; runbook com pelo menos cinco erros reais e como foram resolvidos.</p>
+</div>
+
+<div class="sprint">
+<h2>SPRINT 8 · CI/CD e deploy</h2>
+<p class="meta">Domínios: CI/CD (10%)</p>
+<p><b>Objetivo:</b> nada vai para produção sem passar por pull request e teste.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li>Lógica em <code>src/crypto360/</code> como pacote; notebooks finos que só chamam funções.</li>
+<li><code>pyproject.toml</code>, <code>pytest</code> com SparkSession local e <code>assertDataFrameEqual</code>, fixtures pequenas com dados reais.</li>
+<li>GitHub Actions: no PR roda <code>ruff</code>, <code>pytest</code> e <code>bundle validate</code>; no merge na <code>main</code>, <code>bundle deploy -t prod</code>.</li>
+<li>Targets: <code>dev</code> (<code>mode: development</code>, catálogo <code>crypto360_dev</code>, agendas pausadas) e <code>prod</code> (<code>mode: production</code>, <code>run_as</code>). Variáveis por target.</li>
+<li>Autenticação do CI: service principal com OAuth M2M, se o Free permitir; senão token em GitHub Secret, documentando a limitação.</li>
+<li>Databricks Connect: rodar uma transformação a partir do VS Code no serverless.</li>
+</ul>
+<div class="box prova"><b>Cai na prova.</b> Variável: declara em <code>variables</code>, usa <code>${var.nome}</code>, define por target. Precedência: <code>--var</code> &gt; <code>BUNDLE_VAR_nome</code> &gt; arquivo de overrides &gt; target &gt; default. <code>mode: development</code> prefixa nomes e pausa agendas; <code>mode: production</code> valida e pede <code>run_as</code>. Teste unitário (função isolada, dado sintético) × integração (componentes juntos, ambiente de teste). Git folders: branch, commit+push, pull, merge; o PR é aberto no provedor. PAT só autentica no Git; automação usa service principal.</div>
+<div class="box odi"><b>No ODI era.</b> Smart Export/Import entre repositórios, cenários regenerados por ambiente e contextos. Aqui é o mesmo código, targets diferentes e deploy automático.</div>
+<p><b>Aceite:</b> PR com teste quebrado fica bloqueado; deploy em prod automático pelo Action; dev e prod coexistem no mesmo workspace.</p>
+</div>
+
+<div class="sprint">
+<h2>SPRINT 9 · Dashboard e Crypto Analyst AI</h2>
+<p class="meta">Domínios: pouco peso na prova (tarefa de dashboard no Jobs, SQL warehouse). Pode ficar para depois do exame.</p>
+<p><b>Objetivo:</b> entregar o produto usando só a Gold.</p>
+<p class="lbl">Demandas</p>
+<ul>
+<li>Dashboard AI/BI: preço, retorno, volatilidade, score e frescor, com filtros de ativo e timeframe; publicado no warehouse 2X-Small.</li>
+<li>Espaço Genie restrito à Gold, com instruções e perguntas de exemplo com SQL de referência (conferir disponibilidade no Free).</li>
+<li>Bateria de 10 perguntas de teste, incluindo pergunta ambígua, período sem dados e dado atrasado.</li>
+<li>Opcional: agente próprio (Claude API) consultando a Gold pelo SQL Statement API.</li>
+</ul>
+<p><b>Aceite:</b> dashboard publicado; as respostas mostram o SQL e a data do dado; o assistente admite quando não tem dado.</p>
+</div>
+
+<!-- ============================================================ -->
+<h1 class="pb">6. Mapa de cobertura da prova</h1>
+<p>Pesos do exam guide vigente (prova publicada em 04/mai/2026, guia atualizado em 06/ago/2026). Conferir a página oficial antes de agendar.</p>
+<table>
+<thead><tr><th style="width:21%">Domínio</th><th style="width:6%">Peso</th><th style="width:9%">Sprints</th><th style="width:32%">O projeto pratica</th><th>Estudar à parte (o Free não deixa praticar ou o projeto não usa)</th></tr></thead>
+<tbody>
+<tr><td>1. Plataforma</td><td>6%</td><td>0, 2, 7</td><td>Serverless, UC, volumes, SQL warehouse</td><td>Compute clássico (all-purpose, job cluster), modos Standard/Dedicated, Photon</td></tr>
+<tr><td>2. Ingestão e carga</td><td>21%</td><td>1, 2</td><td>REST + Job, read_files, COPY INTO, Auto Loader, schema evolution, VARIANT, upload manual</td><td>Conectores gerenciados (CDC de banco não roda no Free), Kafka, file notification</td></tr>
+<tr><td>3. Transformação e modelagem</td><td>22%</td><td>3, 4</td><td>Expectations, AUTO CDC, MERGE, joins, windows, MVs, applyInPandas</td><td>Parâmetros de tuning (o serverless não deixa ajustar)</td></tr>
+<tr><td>4. Lakeflow Jobs</td><td>16%</td><td>5</td><td>DAG, for each, if/else, run if, task values, gatilhos, retries, repair</td><td>Requisitos de job cluster</td></tr>
+<tr><td>5. CI/CD</td><td>10%</td><td>0, 8</td><td>Git folders, bundles, targets, CLI, testes, GitHub Actions</td><td>Arquivo de overrides de variáveis</td></tr>
+<tr><td>6. Troubleshooting e otimização</td><td>10%</td><td>5, 7</td><td>Query profile, repair run, time travel, liquid clustering, OPTIMIZE</td><td>Spark UI clássica (stages, spill), falha ao subir cluster, init scripts, conflito de biblioteca</td></tr>
+<tr><td>7. Governança e segurança</td><td>15%</td><td>0, 6</td><td>GRANT/REVOKE, ownership, mask, row filter, ABAC, lineage, secrets</td><td>External location (se a ponte A falhar), DENY no Hive metastore, recursos de nível de conta</td></tr>
+</tbody>
+</table>
+<div class="box"><b>Ordem por pontos.</b> Os Sprints 0 a 8 cobrem os sete domínios. Se a prova chegar antes do fim, priorize 0 → 1 → 2 → 3 → 5 → 6 → 8 e faça 4 e 7 em versão curta. Para a coluna "estudar à parte", use o resumo de 7 páginas já impresso.</div>
+<h2>Formato do exame</h2>
+<ul>
+<li>45 questões que valem nota e até 10 extras sem valor, de múltipla escolha, em 90 minutos.</li>
+<li>Disponível em português. Online com supervisão ou em centro de testes. US$ 200 mais impostos. Validade de 2 anos.</li>
+<li>Nota de corte não publicada. Não há desconto por erro: não deixe questão em branco.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h1>7. Repositório</h1>
+<pre>
+crypto-lakehouse-360/
+├── README.md                  como reproduzir, arquitetura, limitações
+├── databricks.yml             bundle: variables, targets dev/prod
+├── resources/                 jobs.yml, pipelines.yml
+├── src/
+│   ├── crypto360/             pacote Python (testável)
+│   │   ├── ingest/            binance.py, kraken.py, s3_landing.py
+│   │   ├── quality/           regras e quarentena
+│   │   ├── indicators/        ema.py, rsi.py, atr.py, score.py
+│   │   └── common/            config, logging, datas
+│   └── pipelines/             bronze.sql, silver.py, gold.sql
+├── notebooks/                 exploração e notebooks finos de tarefa
+├── sql/                       grants.sql, validacoes/*.sql
+├── tests/                     unit/, fixtures/
+├── collector/                 entrada do coletor no GitHub Actions
+├── docs/                      architecture.md, decisions.md, data_dictionary.md, runbook.md, evidencias/
+├── .github/workflows/         collector.yml, ci.yml, deploy.yml
+├── pyproject.toml
+└── .gitignore                 .env, .databrickscfg, .venv, dados locais
+</pre>
+<h2>Política</h2>
+<ul>
+<li>Nenhuma chave, token, <code>.env</code> ou <code>.databrickscfg</code> no Git. Automação com OIDC (AWS) e GitHub Secrets (Databricks).</li>
+<li>Não subir dados brutos para o GitHub; ficam no S3 e no volume.</li>
+<li>Cada sprint fecha com PR revisado, README atualizado, testes e evidências.</li>
+<li>Agendamento do GitHub Actions pode atrasar e é desligado após 60 dias sem atividade no repositório: o job no Databricks é a rede de segurança.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h1 class="pb">8. Como trabalhar com IA e aprender</h1>
+<table>
+<thead><tr><th style="width:14%">Etapa</th><th style="width:46%">Ação</th><th>Pergunta de domínio</th></tr></thead>
+<tbody>
+<tr><td>1. Entender</td><td>A IA explica o problema e as alternativas antes de qualquer código.</td><td>Que problema resolvemos e por que não do outro jeito?</td></tr>
+<tr><td>2. Planejar</td><td>Definir entrada, saída, chave, grão, falhas possíveis e consumo de cota.</td><td>Quais contratos e riscos existem?</td></tr>
+<tr><td>3. Implementar</td><td>Você escreve no Git folder, em partes pequenas. A IA indica onde clicar e o que escrever, e explica cada opção.</td><td>O que cada linha faz?</td></tr>
+<tr><td>4. Testar</td><td>Caminho normal, duplicidade, inválido, falha externa, reexecução.</td><td>Como sei que está certo?</td></tr>
+<tr><td>5. Revisar</td><td>Você abre o PR; a IA revisa; você faz o merge.</td><td>Outra pessoa aprovaria isso?</td></tr>
+<tr><td>6. Fixar</td><td>Responder sem consultar: como cairia na prova e como era no ODI.</td><td>Consigo explicar numa entrevista?</td></tr>
+</tbody>
+</table>
+<h2>Prompt-base</h2>
+<pre>Estou desenvolvendo o Crypto Lakehouse 360 para migrar de ODI/Oracle para Databricks e PySpark e me preparar para a
+Databricks Certified Data Engineer Associate (prova em português). Atue como mentor: explique o problema, os conceitos e as
+alternativas antes do código; diga o equivalente no ODI; proponha uma implementação pequena que EU vou escrever; inclua
+teste, critério de aceite, erros comuns e como o tema cai na prova. Considere Databricks Free Edition (serverless, internet
+restrita, cota diária), AWS S3 no Free Plan e Binance como fonte. Não avance até eu executar e validar a etapa atual.</pre>
+
+<!-- ============================================================ -->
+<h1>9. Limites do Free Edition e decisões</h1>
+<h2>Limites que afetam o projeto (doc oficial, consultada em 19/11/2026)</h2>
+<table>
+<thead><tr><th style="width:34%">Limite</th><th>Efeito no projeto</th></tr></thead>
+<tbody>
+<tr><td>Só compute serverless</td><td>Sem job cluster nem all-purpose para praticar; poucas configurações <code>spark.*</code>.</td></tr>
+<tr><td>Internet de saída restrita a domínios confiáveis</td><td>Teste de conectividade no Sprint 0 decide fontes e ponte.</td></tr>
+<tr><td>Cota diária; se estourar, o compute desliga até o dia seguinte</td><td>Job a cada 4h no início; pipeline em modo triggered.</td></tr>
+<tr><td>Um pipeline ativo por tipo</td><td>Medalhão inteiro em um pipeline só.</td></tr>
+<tr><td>Até 5 tarefas de job simultâneas</td><td>Concorrência do for each no máximo 5.</td></tr>
+<tr><td>Um SQL warehouse, 2X-Small</td><td>Dashboard e Genie dividem o mesmo warehouse.</td></tr>
+<tr><td>Sem storage próprio do workspace; sem console de conta</td><td>Núcleo em tabelas e volumes gerenciados; recursos de conta ficam na teoria.</td></tr>
+<tr><td>Conectores CDC de banco não suportados</td><td>Lakeflow Connect gerenciado fica na teoria.</td></tr>
+<tr><td>Uso não comercial; conta inativa pode ser apagada</td><td>Só dados públicos e fictícios; código sempre no GitHub.</td></tr>
+</tbody>
+</table>
+<h2>Decisões (vão para <code>docs/decisions.md</code>)</h2>
+<table>
+<thead><tr><th style="width:8%">ADR</th><th style="width:38%">Decisão</th><th>Motivo</th></tr></thead>
+<tbody>
+<tr><td>001</td><td>Projeto novo, separado do BTC-LAKEHOUSE</td><td>Você escreve a ingestão do zero; o projeto antigo fica de referência.</td></tr>
+<tr><td>002</td><td>Binance como fonte principal; Kraken como 2ª fonte opcional</td><td>Histórico completo; Kraken devolve só 720 velas.</td></tr>
+<tr><td>003</td><td>S3 (Free Plan) como Landing; núcleo em Volumes e tabelas gerenciadas</td><td>Pratica AWS como no mercado sem depender do S3 para o lakehouse funcionar.</td></tr>
+<tr><td>004</td><td>Ponte S3 → Databricks: A, B ou C, decidida no Sprint 0</td><td>Conectividade do Free só se conhece testando.</td></tr>
+<tr><td>005</td><td>Um pipeline declarativo para todo o medalhão, em modo triggered</td><td>Limite de um pipeline ativo e cota diária.</td></tr>
+<tr><td>006</td><td>Velas 1h de BTCUSDT e ETHUSDT; 4h e 1d derivados na Gold</td><td>Uma coleta, três timeframes; aumentar ativos só depois de medir cota.</td></tr>
+<tr><td>007</td><td>DECIMAL na Silver, DOUBLE nos indicadores</td><td>Valor exato onde é preço; desempenho onde é estatística.</td></tr>
+<tr><td>008</td><td>Dados de pessoas só fictícios</td><td>Termos do Free Edition e LGPD.</td></tr>
+<tr><td>009</td><td>Streaming contínuo e WebSocket ficam como evolução</td><td>Serverless aceita AvailableNow/Once; velas de 1h não precisam de segundos.</td></tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h1>10. Critérios de conclusão</h1>
+<ul>
+<li>Coletor agendado grava payload real no S3 e chega ao volume pela ponte escolhida.</li>
+<li>Bronze, Silver e Gold no Unity Catalog, documentadas no dicionário de dados.</li>
+<li>Silver sem duplicidade, com expectations, quarentena, AUTO CDC SCD 1 e SCD 2.</li>
+<li>Gold com indicadores conferidos e score versionado.</li>
+<li>Job com controle de fluxo, falha forçada e repair documentados.</li>
+<li>Permissões, mask, row filter e lineage demonstrados.</li>
+<li>PR roda testes; merge implanta prod pelo bundle.</li>
+<li>Dashboard e assistente leem só a Gold e mostram a data do dado.</li>
+<li>Qualquer pessoa reproduz o projeto pelo README.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h1 class="pb">11. Glossário (inglês e português da prova)</h1>
+<table>
+<thead><tr><th style="width:22%">Termo</th><th style="width:22%">Na prova em português</th><th>O que é</th></tr></thead>
+<tbody>
+<tr><td>Streaming table</td><td>tabela de transmissão</td><td>Tabela que só acrescenta o dado novo, lido com <code>STREAM</code>.</td></tr>
+<tr><td>Materialized view</td><td>visualização materializada</td><td>Resultado guardado e atualizado no refresh, incremental quando possível.</td></tr>
+<tr><td>Expectations</td><td>expectativas</td><td>Regras de qualidade do pipeline: warn, drop ou fail.</td></tr>
+<tr><td>Schema enforcement / evolution</td><td>imposição / evolução de esquema</td><td>Rejeitar o que não bate × aceitar e atualizar o esquema.</td></tr>
+<tr><td>Change data capture</td><td>captura de dados de alterações (CDC)</td><td>Aplicar inserts, updates e deletes vindos da fonte.</td></tr>
+<tr><td>AUTO CDC INTO</td><td>AUTO CDC INTO</td><td>Comando do pipeline que aplica CDC por chave, SCD 1 ou 2 (antigo APPLY CHANGES).</td></tr>
+<tr><td>Auto Loader</td><td>Auto Loader</td><td>Ingestão incremental de arquivos com checkpoint (<code>cloudFiles</code>).</td></tr>
+<tr><td>Checkpoint</td><td>ponto de verificação</td><td>Registro do que já foi processado, para retomar sem repetir.</td></tr>
+<tr><td>Trigger / file arrival / table update</td><td>acionador / chegada do arquivo / atualização da tabela</td><td>O que dispara um job.</td></tr>
+<tr><td>Run / repair run</td><td>execução / reexecução</td><td>Rodada do job; reexecutar só o que falhou.</td></tr>
+<tr><td>Task values</td><td>valores de tarefa</td><td>Dado passado de uma tarefa para outra no mesmo job.</td></tr>
+<tr><td>Managed / external table</td><td>tabela gerenciada / externa</td><td>O UC cuida dos arquivos × você informa o local.</td></tr>
+<tr><td>Storage credential / external location</td><td>credencial de armazenamento / local externo</td><td>Como o UC acessa um bucket seu com segurança.</td></tr>
+<tr><td>Column mask / row filter</td><td>máscara de coluna / filtro de linha</td><td>Esconder valor ou linhas conforme quem consulta.</td></tr>
+<tr><td>Service principal</td><td>entidade de serviço</td><td>Identidade para automação, sem pessoa por trás.</td></tr>
+<tr><td>Liquid clustering</td><td>clustering líquido</td><td>Organização dos dados que substitui partição e Z-ORDER.</td></tr>
+<tr><td>Data skew / shuffle / spill</td><td>distorção / embaralhamento / derramamento</td><td>Dados desbalanceados / troca entre nós / estouro de memória para o disco.</td></tr>
+<tr><td>Declarative Automation Bundles</td><td>pacotes (bundles)</td><td>Projeto como código para deploy entre ambientes (antigo Asset Bundles).</td></tr>
+<tr><td>Git folders</td><td>pastas Git</td><td>Pasta do workspace ligada a um repositório (antigo Repos).</td></tr>
+<tr><td>OIDC</td><td>OIDC</td><td>Login federado: o GitHub Actions assume uma role na AWS sem chave fixa.</td></tr>
+<tr><td>Idempotência</td><td>idempotência</td><td>Reexecutar sem duplicar efeito.</td></tr>
+<tr><td>OHLCV</td><td>OHLCV</td><td>Abertura, máxima, mínima, fechamento e volume de uma vela.</td></tr>
+</tbody>
+</table>
+
+<!-- ============================================================ -->
+<h1>12. Fontes</h1>
+<p class="small">Consultadas até 19/11/2026. A página oficial e o exam guide são a autoridade final.</p>
+<ul class="small">
+<li>Databricks Data Engineer Associate: https://www.databricks.com/learn/certification/data-engineer-associate</li>
+<li>Free Edition limitations: https://docs.databricks.com/aws/en/getting-started/free-edition-limitations</li>
+<li>Auto Loader: https://docs.databricks.com/aws/en/ingestion/cloud-object-storage/auto-loader/</li>
+<li>Lakeflow Spark Declarative Pipelines: https://docs.databricks.com/aws/en/ldp/</li>
+<li>Lakeflow Jobs: https://docs.databricks.com/aws/en/jobs/</li>
+<li>Unity Catalog: https://docs.databricks.com/aws/en/data-governance/unity-catalog/</li>
+<li>Declarative Automation Bundles: https://docs.databricks.com/aws/en/dev-tools/bundles/</li>
+<li>Binance market data: https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints</li>
+<li>Binance public data (histórico): https://github.com/binance/binance-public-data</li>
+<li>Kraken OHLC: https://docs.kraken.com/api/docs/rest-api/get-ohlc-data</li>
+<li>AWS Free Tier: https://aws.amazon.com/free/</li>
+<li>IAM OIDC com GitHub Actions: https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services</li>
+<li>moto (S3 simulado em testes): https://docs.getmoto.org/</li>
+</ul>
+
+<h2>Controle de versão</h2>
+<table>
+<thead><tr><th style="width:10%">Versão</th><th style="width:14%">Data</th><th>Alteração</th></tr></thead>
+<tbody>
+<tr><td>1.0</td><td>18/11/2026</td><td>Documento inicial.</td></tr>
+<tr><td>2.0</td><td>19/11/2026</td><td>Binance como fonte; S3 Free Plan como Landing e Volumes como núcleo; pipeline declarativo desde a Bronze; AUTO CDC; bundle desde o Sprint 0; sprint de governança; de-para ODI; blocos "cai na prova"; mapa do que estudar à parte; glossário em português.</td></tr>
+</tbody>
+</table>
+
+</body>
+</html>
