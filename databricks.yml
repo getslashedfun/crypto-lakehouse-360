@@ -1,0 +1,17 @@
+bundle:
+  name: crypto360
+
+include:
+  - resources/*.yml
+
+variables:
+  catalogo:
+    description: Catálogo do Unity Catalog usado pelo projeto
+    default: crypto360
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-9cb395bf-ae37.cloud.databricks.com

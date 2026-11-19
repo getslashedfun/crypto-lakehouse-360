@@ -1,0 +1,10 @@
+resources:
+  jobs:
+    conectividade:
+      name: crypto360_conectividade
+      tasks:
+        - task_key: testar_dominios
+          notebook_task:
+            notebook_path: ../src/conectividade.py
+            base_parameters:
+              catalogo: ${var.catalogo}
