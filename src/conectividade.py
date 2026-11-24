@@ -1,6 +1,13 @@
 # Databricks notebook source
-# ^ Esta 1ª linha faz o Databricks abrir o .py como NOTEBOOK (e não como arquivo comum).
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
+# ^ 1ª linha: faz o Databricks abrir o .py como NOTEBOOK (e não como arquivo comum).
 #   Vantagem sobre .ipynb: é texto puro, então o diff no Git fica legível.
+# ^ Bloco "/// script": versão do ambiente SERVERLESS (Python + bibliotecas) que o notebook usa.
+#   O Databricks grava esse bloco sozinho quando você roda o notebook em serverless. Deixamos
+#   versionado aqui para o arquivo do Git ficar igual ao do workspace (evita conflito no Pull).
 #
 # OBJETIVO: descobrir quais domínios da internet o compute serverless consegue alcançar
 #           (o Free Edition restringe a saída) e guardar o resultado numa tabela Delta.
