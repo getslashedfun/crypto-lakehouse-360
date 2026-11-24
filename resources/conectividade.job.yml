@@ -1,10 +1,15 @@
+# Job de conectividade (Sprint 0).
+# Este arquivo é incluído pelo databricks.yml (include: resources/*.yml).
+# Prova: Lakeflow Jobs = tarefas + dependências (DAG) + gatilho. Aqui: 1 tarefa, sem gatilho (roda sob demanda).
 resources:
   jobs:
-    conectividade:
-      name: crypto360_conectividade
+    conectividade:                    # chave do recurso no bundle: é o nome usado em "bundle run conectividade"
+      name: crypto360_conectividade   # nome que aparece em Jobs & Pipelines (com prefixo [dev usuario] no target dev)
       tasks:
-        - task_key: testar_dominios
+        - task_key: testar_dominios   # identificador da tarefa dentro do job (usado em depends_on no Sprint 5)
+          # Sem bloco de cluster => a tarefa roda em SERVERLESS (o único compute do Free Edition).
+          # Prova: tarefa de notebook precisa de compute; tarefa SQL precisa de SQL warehouse.
           notebook_task:
-            notebook_path: ../src/conectividade.py
-            base_parameters:
-              catalogo: ${var.catalogo}
+            notebook_path: ../src/conectividade.py   # caminho relativo a ESTE arquivo .yml
+            base_parameters:                         # parâmetros da TAREFA -> viram os widgets do notebook
+              catalogo: ${var.catalogo}              # resolvido no deploy a partir do databricks.yml

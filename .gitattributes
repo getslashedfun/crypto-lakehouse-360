@@ -1,0 +1,8 @@
+# Fim de linha padronizado em LF (padrão Linux) para todo arquivo de texto.
+# O Databricks roda em Linux; assim o repositório fica igual no PC e no workspace.
+* text=auto eol=lf
+
+# Binários: o Git não deve mexer neles.
+*.pdf binary
+*.png binary
+*.zip binary
